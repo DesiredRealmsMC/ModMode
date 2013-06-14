@@ -15,11 +15,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-
 public class ModModeListener implements Listener {
+
     private final ModMode plugin;
 
     public class ModModeRunnable implements Runnable {
+
         private final Player player;
 
         public ModModeRunnable(Player foo) {
@@ -30,7 +31,6 @@ public class ModModeListener implements Listener {
             plugin.toggleModMode(player, true, true);
         }
     }
-
 
     ModModeListener(ModMode instance) {
         plugin = instance;
@@ -45,10 +45,12 @@ public class ModModeListener implements Listener {
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new ModModeRunnable(player));
         }
 
-        if (plugin.vanished.contains(player.getName()))
+        if (plugin.vanished.contains(player.getName())) {
             plugin.enableVanish(player);
-        if (plugin.fullvanished.contains(player.getName()))
+        }
+        if (plugin.fullvanished.contains(player.getName())) {
             plugin.enableFullVanish(player);
+        }
 
         plugin.updateVanishLists(player);
 
@@ -86,26 +88,31 @@ public class ModModeListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        if (plugin.isInvisible(event.getPlayer()))
+        if (plugin.isInvisible(event.getPlayer())) {
             event.setCancelled(true);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        if (plugin.isInvisible(event.getPlayer()))
+        if (plugin.isInvisible(event.getPlayer())) {
             event.setCancelled(true);
-        if (plugin.isModMode(event.getPlayer()))
+        }
+        if (plugin.isModMode(event.getPlayer())) {
             event.setCancelled(true);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onEntityTarget(EntityTargetEvent event) {
-        if (!(event.getTarget() instanceof Player))
+        if (!(event.getTarget() instanceof Player)) {
             return;
+        }
 
         Player player = (Player) event.getTarget();
-        if (plugin.isModMode(player) || plugin.isInvisible(player))
+        if (plugin.isModMode(player) || plugin.isInvisible(player)) {
             event.setCancelled(true);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -118,8 +125,7 @@ public class ModModeListener implements Listener {
                 Player victim = (Player) e.getEntity();
                 if (plugin.isModMode(damager) || plugin.isInvisible(damager)) {
                     event.setCancelled(true);
-                }
-                // only show message if they aren't invisible
+                } // only show message if they aren't invisible
                 else if (plugin.isModMode(victim) && !plugin.isInvisible(victim)) {
                     damager.sendMessage("This moderator is in ModMode.");
                     damager.sendMessage("ModMode should only be used for official server business.");
@@ -136,22 +142,23 @@ public class ModModeListener implements Listener {
             }
         }
     }
-    
+
     @EventHandler(ignoreCancelled = true)
     public void onPlayerChangeWorld(PlayerChangedWorldEvent e) {
-        if (e.getPlayer().getGameMode() == GameMode.CREATIVE)
+        if (e.getPlayer().getGameMode() == GameMode.CREATIVE) {
             return;
-        
+        }
+
         if (plugin.allowFlight) {
             e.getPlayer().setAllowFlight(plugin.isModMode(e.getPlayer()));
         }
     }
-    
+
     @EventHandler(ignoreCancelled = true)
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if (event.getEntity() instanceof Player) {
-            Player player = (Player)event.getEntity();
-            if( plugin.isModMode(player)){
+            Player player = (Player) event.getEntity();
+            if (plugin.isModMode(player)) {
                 if (player.getFoodLevel() != 20) {
                     player.setFoodLevel(20);
                 }
